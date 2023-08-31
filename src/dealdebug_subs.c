@@ -7,7 +7,6 @@
 #include <stdio.h>          /* for perror() */
 #include <stdlib.h>         /* for srand48, mrand48 and friends */
 #include <string.h>
-#include <sys/random.h>    /* for getrandom() */
 #include <assert.h>
 
 #include "../include/dealdefs.h"

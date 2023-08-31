@@ -11,7 +11,9 @@
 #include <errno.h>            /* errno, ECHILD        */
 #include <getopt.h>
 #include <limits.h>           /* bits/char; max and min for ints and unsigned ints etc. */
-#include <malloc.h>           /* for malloc_usable_size for debugging.  */
+#ifndef __MACOSX__
+  #include <malloc.h>         /* for malloc_usable_size for debugging.  */
+#endif
 #include <math.h>             /* for atof and sqrt -- sqrt needs -lm as a linker flag*/
 #include <stddef.h>           /* offsetof                            */
 #include <stdio.h>            /* printf(), scanf,                    */
@@ -22,6 +24,7 @@
 #include <sys/random.h>       /* for getrandom() */
 #include <sys/time.h>         /* why do we need both time.h and this one? */
 #include <sys/types.h>        /* /usr/include/x86_64-linux-gnu/sys   for pid_t  */
+#include <sys/random.h>       /* for getrandom() */
 
 #endif /* ifndef std_hdrs_h */
 

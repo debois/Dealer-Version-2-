@@ -16,6 +16,8 @@
 #endif
 #define OPTSTR "hmquvVg:p:s:x:C:D:L:M:O:P:R:T:N:E:S:W:X:U:0:1:2:3:4:5:6:7:8:9:"
 
+#include <stdio.h>
+
 long int init_rand48( long int seed ) {
     union {
         unsigned short int sss[3] ;
@@ -31,7 +33,13 @@ long int init_rand48( long int seed ) {
         return seed ;
     }
     /* user has not specified a seed, so get one from the kernel and use seed48 instead of srand48*/
+#ifndef __MACOSX__
     numbytes = getrandom(su.sbuff, sizeof(su.sbuff), 0) ;
+#else
+    arc4random_buf(su.sbuff, sizeof(su.sbuff));
+    numbytes = sizeof(su.sbuff);  // arc4random_buf cannot fail. 
+#endif
+
     if ( !numbytes ) {
        perror("getrandom FAILED. Cannot seed rand48") ;
        exit (-1) ;

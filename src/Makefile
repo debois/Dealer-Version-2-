@@ -7,13 +7,17 @@
 # 2022/12/13 -- renamed usereval_subs.c to dealServer_subs.c; added UserEval sub-dir
 # 2023/01/07 -- Merged in changes from V4 to fix predeal; dealcards_subs.c and globals, etc.
 
-CC      = gcc
-CFLAGS = -std=gnu17 -mtune=corei7 -flto -fopenmp -pthread -Wall -pedantic -O3 -g -Og -I../include
+#M CC      = gcc
+CC      = gcc-13
+# Added -debois
+CPPFLAGS = -D__MACOSX__ 
+CFLAGS = $(CPPFLAGS) -std=gnu17 -mtune=corei7 -flto -fopenmp -pthread -Wall -pedantic -O3 -g -Og -I../include
 #Note CPP and CPPFLAGS are for the C PreProcessor. Use CXX and CXXFLAGS for C++ aka g++
-CXX = g++
+#M CXX = g++
+CXX = g++-13
 CXXFLAGS = -std=gnu++17 -mtune=corei7 -flto -fopenmp -pthread  -O3 -g -Og -I../include
 #can add --verbose to this next one to debug linker problems
-LDFLAGS = -L../lib -lm -ldds
+LDFLAGS = -L../lib -lm -ldds  
 DESTDIR = ../src
 
 ifdef JGMDBG
@@ -23,20 +27,23 @@ DESTDIR = ../Debug
 endif
 
 FLEX    = flex
-YACC    = bison -d
+#M YACC    = bison -d
+YACC    = /usr/local/opt/bison/bin/bison -d
 
 PROGRAM  = dealjgm
 
 SRCS  = ../src/dealaction_subs.c ../src/dealdds_subs.c ../src/dealdebug_subs.c ../src/dealeval_subs.c ../src/dealcard_subs.c
 SRCS += ../src/dealparse_subs.c ../src/Dealer_DDS_IF.c ../src/c4.c ../src/deal_bktfreq_subs.c
+SRCS += ../src/dealinit_subs.c ../src/dealrpdd_subs.c 
 SRCS += ../src/dealServer_subs.c ../src/dealerv2.c
 
-OBJS = $(patsubst ../src/%.c,%.o,$(SRCS) ) dealglobals.o dealflex.o dealyacc.tab.o
+
+OBJS = dealglobals.o dealflex.o dealyacc.tab.o $(patsubst ../src/%.c,%.o,$(SRCS) ) 
 
 HDR  = ../include/allheaders.h ../include/dbgprt_macros.h
 # Need to link with g++ because libdds library was built with c++
 dealsrc: ${OBJS}
-	$(CXX) $(CXXFLAGS) -o $@ ${OBJS}  $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ ${OBJS}  $(LDFLAGS) 
 
 allheaders :
 	touch ../include/allheaders.h
